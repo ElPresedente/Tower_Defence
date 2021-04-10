@@ -19,10 +19,11 @@ public class TileTypeChange : MonoBehaviour
         if(tileType == TileType.Earth)
         {
             gameObject.transform.GetChild(0).GetComponent<Renderer>().material = earthType;
+            gameObject.transform.localScale = new Vector3((float)0.5, (float)1.5, (float)0.5);
         }
         else
         {
-            gameObject.GetComponent<Renderer>().material = grassType;
+            gameObject.transform.GetChild(0).GetComponent<Renderer>().material = grassType;
         }
         
     }
@@ -33,5 +34,5 @@ public enum TileType
 {
     Undefined,
     Earth,
-    Grass
+    Path
 }
