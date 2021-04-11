@@ -42,20 +42,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &8036295873056260568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8059163690380823153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c2360731899b524eb6a9ad7dea8d7d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  earthType: {fileID: 2100000, guid: 120f5a696ba12c047aa40dac42c7f0c5, type: 2}
-  grassType: {fileID: 2100000, guid: 5f480a86e6df5dd47a8560f536a1c64c, type: 2}
 --- !u!1001 &7140052024999884576
 PrefabInstance:
   m_ObjectHideFlags: 0

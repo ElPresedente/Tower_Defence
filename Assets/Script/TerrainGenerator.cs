@@ -3,34 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 //using System.Text.Json;
 
-public class MapCreate : MonoBehaviour
+public class TerrainGenerator : MonoBehaviour
 {
+    [Tooltip("Префаб тайла")]
     public GameObject Tile;
+    [Space()]
+    [Tooltip("Материал тайла типа Path")]
+    public Material PathMaterial;
+    [Tooltip("Материал тайла типа Earth")]
+    public Material EarthMaterial;
+    [Tooltip("Материал тайла типа Citadel")]
+    public Material CitadelMaterial;
 
-    public LevelData temp = new LevelData(10, 10);
+    private LevelData temp = new LevelData(10, 10);
 
-    public GameObject[,] Array = new GameObject[10, 10];
-    // Start is called before the first frame update
-    void Start()
+    private GameObject[,] Array = new GameObject[10, 10];
+    [ContextMenu("Create a field")]
+    void Awake()
     {
+        //To do: чтение информации об уровне из файла
         tempCreateLevelData();
         CreateField();
-        Array[1, 3].GetComponent<TileTypeChange>().SetTileType(TileType.Earth);
-        //Array[1, 3].GetComponent<Renderer>().material.SetColor("test", new Color(0, 0, 0));
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
+        SetTylesTypes();
     }
 
-    private void CreateField()
+    /// <summary>
+    /// Функция для создания пустого игрового поля
+    /// </summary>
+    void CreateField()
     {
         Vector3 position = new Vector3(0, 0, 0);
         Quaternion rotation = new Quaternion(0, 0, 0, 0);
         LevelData data = ReadLevelData();
-
 
         for (int i = 0; i < data.y; i += 2)
         {
@@ -55,20 +60,56 @@ public class MapCreate : MonoBehaviour
             position -= new Vector3(position.x -1.7f, 0, 0);
             position += new Vector3(0, 0, 6);
         }
-        SetTylesTypes();
     }
-
+    /// <summary>
+    /// первичное определение типов тайлов
+    /// </summary>
     void SetTylesTypes()
     {
         for(int i = 0; i < temp.x; i++)
         {
             for(int j = 0; j < temp.y; j++)
             {
-                Array[i, j].GetComponent<TileTypeChange>().SetTileType(temp.tileArray[i, j].type);
+                SetTileType(temp.tileArray[i, j].type, Array[i, j]);
             }
         }
     }
-    public LevelData ReadLevelData()
+    /// <summary>
+    /// Преобразование тайла в указанный тип
+    /// </summary>
+    /// <param name="tileType">Новый тип тайла</param>
+    /// <param name="gameObject">Объект тайла</param>
+    void SetTileType(TileType tileType, GameObject gameObject)
+    {
+        switch (tileType)
+        {
+            case TileType.Earth:
+                {
+                    gameObject.transform.GetChild(0).GetComponent<Renderer>().material = EarthMaterial;
+                    gameObject.transform.localScale = new Vector3((float)0.5, (float)1.5, (float)0.5);
+                    break;
+                }
+            case TileType.Path:
+                {
+                    gameObject.transform.GetChild(0).GetComponent<Renderer>().material = PathMaterial;
+                    break;
+                }
+            case TileType.Citadel:
+                {
+                    gameObject.transform.GetChild(0).GetComponent<Renderer>().material = CitadelMaterial;
+                    gameObject.transform.localScale = new Vector3((float)0.5, (float)5, (float)0.5);
+                    gameObject.AddComponent<SphereCollider>().radius = 0.6f;
+                    gameObject.GetComponent<SphereCollider>().isTrigger = true;
+                    gameObject.AddComponent<Rigidbody>();
+                    break;
+                }
+        }
+    }
+    /// <summary>
+    /// Чтение информации об уровне из файла
+    /// </summary>
+    /// <returns></returns>
+    LevelData ReadLevelData()
     {
         LevelData levelData;
         /*StreamReader reader = new StreamReader("Assets/Levels/level1.txt");
@@ -78,7 +119,7 @@ public class MapCreate : MonoBehaviour
         return levelData;
     }
 
-    public void tempCreateLevelData()
+    void tempCreateLevelData()
     {
         temp.x = 10;
         temp.y = 10;
@@ -91,7 +132,7 @@ public class MapCreate : MonoBehaviour
                                  {1,2,2,1,1,1,1,2,2,1},
                                  {1,1,1,2,2,1,1,1,2,1},
                                  {1,2,2,2,1,2,2,2,2,1},
-                                 {2,1,1,1,1,1,1,1,1,1} };
+                                 {3,1,1,1,1,1,1,1,1,1} };
         for(int i = 0; i < temp.x; i++)
         {
             for(int j = 0; j < temp.y; j++)
@@ -101,27 +142,6 @@ public class MapCreate : MonoBehaviour
         }
     }
 }
-public struct LevelData
-{
-    public int x;
-    public int y;
-    public TileData[,] tileArray;
-    public LevelData(int x, int y)
-    {
-        this.x = x;
-        this.y = y;
-        tileArray = new TileData[x, y];
-    }
-}
 
-public struct TileData
-{
-    public TileType type;
-    // etc
-    public TileData(TileType type_)
-    {
-        type = type_;
-    }
-}
 
 
