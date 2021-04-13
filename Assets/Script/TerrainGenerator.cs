@@ -1,4 +1,3 @@
-using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 //using System.Text.Json;
@@ -7,6 +6,7 @@ public class TerrainGenerator : MonoBehaviour
 {
     [Tooltip("Префаб тайла")]
     public GameObject Tile;
+    public GameObject TowerBase;
     [Space()]
     [Tooltip("Материал тайла типа Path")]
     public Material PathMaterial;
@@ -14,13 +14,17 @@ public class TerrainGenerator : MonoBehaviour
     public Material EarthMaterial;
     [Tooltip("Материал тайла типа Citadel")]
     public Material CitadelMaterial;
+    public Material TowerBaseMaterial;
+    public GameObject gameManagerObject;
 
+    private GameManager gameManager;
     private LevelData temp = new LevelData(10, 10);
 
     private GameObject[,] Array = new GameObject[10, 10];
     [ContextMenu("Create a field")]
     void Awake()
     {
+        gameManager = gameManagerObject.GetComponent<GameManager>();
         //To do: чтение информации об уровне из файла
         tempCreateLevelData();
         CreateField();
@@ -100,7 +104,18 @@ public class TerrainGenerator : MonoBehaviour
                     gameObject.transform.localScale = new Vector3((float)0.5, (float)5, (float)0.5);
                     gameObject.AddComponent<SphereCollider>().radius = 0.6f;
                     gameObject.GetComponent<SphereCollider>().isTrigger = true;
-                    gameObject.AddComponent<Rigidbody>();
+                    gameObject.AddComponent<Rigidbody>().useGravity = false;
+                    gameObject.AddComponent<Citadel>();
+                    break;
+                }
+            case TileType.TowerPlace:
+                {
+                    gameObject.transform.localScale = new Vector3((float)0.5, (float)1.3, (float)0.5);
+                    gameObject.transform.GetChild(0).GetComponent<Renderer>().material = TowerBaseMaterial;
+                    gameObject.transform.GetChild(0).GetComponent<MeshFilter>().mesh = TowerBase.GetComponent<MeshFilter>().sharedMesh;
+                    gameObject.AddComponent<TowerBase>().gameManager = gameManager;
+                    
+                    gameManager.TowersArray.Add(gameObject);
                     break;
                 }
         }
@@ -126,7 +141,7 @@ public class TerrainGenerator : MonoBehaviour
         int[,] tempTileArray = { {1,1,1,1,1,1,1,1,1,1},
                                  {1,1,1,1,1,1,1,1,1,1},
                                  {1,1,1,2,2,1,1,2,2,1},
-                                 {1,2,2,1,2,2,2,1,2,2},
+                                 {1,2,2,4,2,2,2,1,2,2},
                                  {1,2,1,1,1,1,1,1,1,1},
                                  {2,1,2,2,2,2,2,1,1,1},
                                  {1,2,2,1,1,1,1,2,2,1},
@@ -141,7 +156,6 @@ public class TerrainGenerator : MonoBehaviour
             }
         }
     }
+
+    
 }
-
-
-

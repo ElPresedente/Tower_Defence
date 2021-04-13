@@ -3,7 +3,8 @@ public enum TileType
     Undefined,
     Earth,
     Path,
-    Citadel
+    Citadel,
+    TowerPlace
 }
 public struct LevelData
 {
