@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -13,5 +11,18 @@ public class Bullet : MonoBehaviour
     void FixedUpdate()
     {
         gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, Target.transform.position, Time.deltaTime * MovementSpeed);
+        if((Target.transform.position - gameObject.transform.position).magnitude <= 0.05f)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            other.GetComponent<HealthComponent>().HealthPoints -= Damage;
+            gameObject.SetActive(false);
+        }
     }
 }

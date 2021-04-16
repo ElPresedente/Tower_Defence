@@ -5,26 +5,57 @@ using UnityEngine;
 public class Tower : MonoBehaviour
 {
     public double Damage;
-
     public double FireSpeed;
+
     private double timeToShoot;
+
     private Transform FirePoint;
-    // Start is called before the first frame update
+
+    private List<GameObject> EnemiesList = new List<GameObject>();
+
+
     void Start()
     {
-        timeToShoot = FireSpeed / 60;
+        Damage = StaticGameManager.TowerDamage;
+        FireSpeed = StaticGameManager.TowerFireSpeed;
 
+        timeToShoot = 0;
         FirePoint = gameObject.transform.Find("Icosphere");
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        timeToShoot -= Time.deltaTime;
+        if (EnemiesList.Count != 0 && !EnemiesList[0].activeSelf)
+        {
+            EnemiesList.Remove(EnemiesList[0]);
+        }
+        if (EnemiesList.Count != 0 && timeToShoot <= 0)
+        {
+            Debug.Log("Shoot");
+            timeToShoot = 60 / FireSpeed;
+            GameObject bullet = Instantiate(StaticGameManager.GameManager.Bullet, FirePoint.position, new Quaternion(0, 0, 0, 0), StaticGameManager.GameManager.transform);
+            bullet.AddComponent<Bullet>().Target = EnemiesList[0];
+            bullet.GetComponent<Bullet>().Damage = Damage;
+            bullet.GetComponent<Bullet>().MovementSpeed = StaticGameManager.BulletSpeed;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Tower detect");
+        if (other.CompareTag("Enemy"))
+        {
+            EnemiesList.Add(other.gameObject);
+        }
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            EnemiesList.Remove(other.gameObject);
+        }
     }
 }

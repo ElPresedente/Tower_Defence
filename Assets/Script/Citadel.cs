@@ -4,30 +4,30 @@ using UnityEngine;
 
 public class Citadel : MonoBehaviour
 {
-    private HealthComponent health;
+    private HealthComponent Health;
+    private SphereCollider Collider;
     void Start()
     {
-        health = gameObject.AddComponent<HealthComponent>();
-        health.HealthPoints = 100d;
-        health.zeroFunction = onCitadelDie;
-    }
+        Health = gameObject.AddComponent<HealthComponent>();
+        Health.onZeroHealth = OnZeroHealth;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+        Collider = gameObject.AddComponent<SphereCollider>();
+        Collider.radius = 0.6f;
+        Collider.isTrigger = true;
 
-    private void OnTriggerEnter(Collider other)
+        Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
+        rigidbody.useGravity = false;
+    }
+    void OnTriggerEnter(Collider other)
     {
         Debug.Log("Entered");
         if (other.CompareTag("Enemy"))
         {
-            health.GetDamage(10);
-            other.gameObject.SetActive(false);
+            Health.HealthPoints -= other.GetComponent<Enemy>().Damage;
+            
         }
     }
-    void onCitadelDie()
+    void OnZeroHealth()
     {
         Debug.Log("Loose");
     }

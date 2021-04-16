@@ -223,6 +223,7 @@ MonoBehaviour:
   EnemyObject: {fileID: 8350672645092704973, guid: 90b5a4569a9575049a6721c004cd568d, type: 3}
   TowersArray: []
   Tower: {fileID: 8996007460767705421, guid: 7b191e284b1a62d4db45a5adc1f7db73, type: 3}
+  Bullet: {fileID: 2486526964269522587, guid: ad39fe29bde359641bb5ca7a48ed7676, type: 3}
 --- !u!4 &73703360
 Transform:
   m_ObjectHideFlags: 0

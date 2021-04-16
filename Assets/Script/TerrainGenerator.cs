@@ -8,23 +8,25 @@ public class TerrainGenerator : MonoBehaviour
     public GameObject Tile;
     public GameObject TowerBase;
     [Space()]
+
     [Tooltip("Материал тайла типа Path")]
     public Material PathMaterial;
+
     [Tooltip("Материал тайла типа Earth")]
     public Material EarthMaterial;
+
     [Tooltip("Материал тайла типа Citadel")]
     public Material CitadelMaterial;
-    public Material TowerBaseMaterial;
-    public GameObject gameManagerObject;
 
-    private GameManager gameManager;
+    [Tooltip("Материал башни")]
+    public Material TowerBaseMaterial;
+
     private LevelData temp = new LevelData(10, 10);
 
     private GameObject[,] Array = new GameObject[10, 10];
     [ContextMenu("Create a field")]
-    void Awake()
+    void Start()
     {
-        gameManager = gameManagerObject.GetComponent<GameManager>();
         //To do: чтение информации об уровне из файла
         tempCreateLevelData();
         CreateField();
@@ -102,9 +104,6 @@ public class TerrainGenerator : MonoBehaviour
                 {
                     gameObject.transform.GetChild(0).GetComponent<Renderer>().material = CitadelMaterial;
                     gameObject.transform.localScale = new Vector3((float)0.5, (float)5, (float)0.5);
-                    gameObject.AddComponent<SphereCollider>().radius = 0.6f;
-                    gameObject.GetComponent<SphereCollider>().isTrigger = true;
-                    gameObject.AddComponent<Rigidbody>().useGravity = false;
                     gameObject.AddComponent<Citadel>();
                     break;
                 }
@@ -113,9 +112,9 @@ public class TerrainGenerator : MonoBehaviour
                     gameObject.transform.localScale = new Vector3((float)0.5, (float)1.3, (float)0.5);
                     gameObject.transform.GetChild(0).GetComponent<Renderer>().material = TowerBaseMaterial;
                     gameObject.transform.GetChild(0).GetComponent<MeshFilter>().mesh = TowerBase.GetComponent<MeshFilter>().sharedMesh;
-                    gameObject.AddComponent<TowerBase>().gameManager = gameManager;
+                    gameObject.AddComponent<TowerBase>();
                     
-                    gameManager.TowersArray.Add(gameObject);
+                    StaticGameManager.GameManager.TowersArray.Add(gameObject);
                     break;
                 }
         }

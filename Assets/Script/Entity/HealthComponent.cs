@@ -4,16 +4,20 @@ using UnityEngine;
 
 public class HealthComponent : MonoBehaviour
 {
-    public double HealthPoints;
-    public onZeroHealth zeroFunction;
-
-    public void GetDamage(double dmg)
+    public double HealthPoints
     {
-        HealthPoints -= dmg;
-        if(HealthPoints <= 0)
+        get => _HealthPoints;
+        set
         {
-            zeroFunction();
+            _HealthPoints = value;
+            if(_HealthPoints <= 0)
+            {
+                onZeroHealth();
+            }
         }
     }
+    public onZeroHealth onZeroHealth;
+
+    public double _HealthPoints;
 }
 public delegate void onZeroHealth();

@@ -1,3 +1,5 @@
+using UnityEngine;
+using System;
 public enum TileType
 {
     Undefined,
@@ -26,5 +28,15 @@ public struct TileData
     public TileData(TileType type_)
     {
         type = type_;
+    }
+}
+
+[Serializable]
+public struct JsonStruct
+{
+    public Vector3[] VectorPath;
+    public JsonStruct(Vector3[] array)
+    {
+        this.VectorPath = array;
     }
 }
