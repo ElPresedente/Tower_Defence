@@ -9,7 +9,7 @@ public class Citadel : MonoBehaviour
     void Start()
     {
         Health = gameObject.AddComponent<HealthComponent>();
-        Health.onZeroHealth = OnZeroHealth;
+        Health.onZeroHealth = StaticGameManager.GameManager.OnCitadelDie;
 
         Collider = gameObject.AddComponent<SphereCollider>();
         Collider.radius = 0.6f;
@@ -27,8 +27,5 @@ public class Citadel : MonoBehaviour
             
         }
     }
-    void OnZeroHealth()
-    {
-        Debug.Log("Loose");
-    }
+
 }

@@ -1,5 +1,7 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
+
 public enum TileType
 {
     Undefined,
@@ -8,12 +10,12 @@ public enum TileType
     Citadel,
     TowerPlace
 }
-public struct LevelData
+public struct LevelFieldData
 {
     public int x;
     public int y;
     public TileData[,] tileArray;
-    public LevelData(int x, int y)
+    public LevelFieldData(int x, int y)
     {
         this.x = x;
         this.y = y;
@@ -31,6 +33,23 @@ public struct TileData
     }
 }
 
+public struct EnemyData
+{
+    public EnemyData(GameObject enemyPrefab)
+    {
+        EnemyPrefab = enemyPrefab;
+        EnemyHealth = 500;
+        EnemyMovementSpeed = 10;
+        EnemyDamage = 250;
+        EnemyGold = 25;
+    }
+    public GameObject EnemyPrefab;
+    public double EnemyHealth;
+    public float EnemyMovementSpeed;
+    public double EnemyDamage;
+    public int EnemyGold;
+}
+
 [Serializable]
 public struct JsonStruct
 {
@@ -39,4 +58,13 @@ public struct JsonStruct
     {
         this.VectorPath = array;
     }
+}
+
+[Serializable]
+public struct LevelData
+{
+    public Vector3[] EnemyPath;
+    public LevelFieldData FieldData;
+    public Queue<EnemyData> EnemiesWaves;
+    public double CitadelHealth;
 }

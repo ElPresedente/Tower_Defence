@@ -1,4 +1,4 @@
 public static class Constants
 {
-    static public LevelData levelfirst;
+    static public LevelFieldData levelfirst;
 }

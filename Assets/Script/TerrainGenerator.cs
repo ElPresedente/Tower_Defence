@@ -21,7 +21,7 @@ public class TerrainGenerator : MonoBehaviour
     [Tooltip("Материал башни")]
     public Material TowerBaseMaterial;
 
-    private LevelData temp = new LevelData(10, 10);
+    private LevelFieldData temp = new LevelFieldData(10, 10);
 
     private GameObject[,] Array = new GameObject[10, 10];
     [ContextMenu("Create a field")]
@@ -41,7 +41,7 @@ public class TerrainGenerator : MonoBehaviour
     {
         Vector3 position = new Vector3(0, 0, 0);
         Quaternion rotation = new Quaternion(0, 0, 0, 0);
-        LevelData data = ReadLevelData();
+        LevelFieldData data = ReadLevelData();
 
         for (int i = 0; i < data.y; i += 2)
         {
@@ -123,9 +123,9 @@ public class TerrainGenerator : MonoBehaviour
     /// Чтение информации об уровне из файла
     /// </summary>
     /// <returns></returns>
-    LevelData ReadLevelData()
+    LevelFieldData ReadLevelData()
     {
-        LevelData levelData;
+        LevelFieldData levelData;
         /*StreamReader reader = new StreamReader("Assets/Levels/level1.txt");
         string jsonString = reader.ReadLine();
         levelData = JsonSerializer.Deserialize<LevelData>(jsonString);*/

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public EnemyData EnemyData;
     public HealthComponent Health;
     public double Damage;
     private FollowingPath MovingComp;
