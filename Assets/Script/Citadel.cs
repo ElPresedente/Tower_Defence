@@ -24,6 +24,7 @@ public class Citadel : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             Health.HealthPoints -= other.GetComponent<Enemy>().Damage;
+            other.gameObject.SetActive(false);
             
         }
     }

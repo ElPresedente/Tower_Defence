@@ -5,16 +5,18 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public EnemyData EnemyData;
-    public HealthComponent Health;
+    public HealthComponent HealthComp;
     public double Damage;
     private FollowingPath MovingComp;
     void Start()
     {
-        Health = gameObject.AddComponent<HealthComponent>();
-        Health.onZeroHealth = OnZeroHealth;
+        HealthComp = gameObject.AddComponent<HealthComponent>();
+        HealthComp.onZeroHealth = OnZeroHealth;
+        HealthComp.HealthPoints = EnemyData.EnemyHealth;
 
         MovingComp = gameObject.AddComponent<FollowingPath>();
-        MovingComp.MovementSpeed = StaticGameManager.EnemyMovementSpeed;
+        MovingComp.MovementSpeed = EnemyData.EnemyMovementSpeed;
+
 
         Damage = StaticGameManager.EnemyDamage;
     }

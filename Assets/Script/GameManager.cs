@@ -27,13 +27,9 @@ public class GameManager : MonoBehaviour
     [Range(0f, 5f)]
     public float NextEnemySpawnDelay;
     private float TimeForNextEnemySpawn;
-    private int EnemiesInCurrentWave;
+    public int EnemiesInCurrentWave;
     public List<int> EnemiesInWaves;
-
-    public int NumberOfWaves;
-    private int CurrentWaveNumber = 0;
-
-    private bool isCitadelLive = true;
+    public int CurrentWaveNumber = 0;
 
 
     private void Awake()
@@ -42,31 +38,50 @@ public class GameManager : MonoBehaviour
         TimeForNextWave = NextWaveCooldown;
         TimeForNextEnemySpawn = StaticGameManager.TimeForNextEnemy;
         QueueOfEnemies = new Queue<EnemyData>();
-        for(int i = 0; i < 5 * NumberOfWaves; i++)
+        EnemiesInWaves = new List<int>(5);
+        for (int i = 0; i < 5; i++)
         {
+            EnemiesInWaves.Add(5);
+        }
+        for (int i = 0; i < 5 * EnemiesInWaves.Count; i++)
+        {
+            Debug.Log("Added");
             QueueOfEnemies.Enqueue(new EnemyData(EnemyObject));
         }
+        EnemiesInWaves = new List<int>(5);
+        for(int i = 0; i < 5; i++)
+        {
+            EnemiesInWaves.Add(5);
+        }
+        EnemiesInCurrentWave = EnemiesInWaves[CurrentWaveNumber];
     }
     private void Update()
     {
-        if(EnemiesInCurrentWave == 0)
+        Debug.Log(TimeForNextEnemySpawn);
+        if (TimeForNextWave <= 0)
         {
-            TimeForNextWave -= Time.deltaTime;
-        }
-        else if(TimeForNextWave <= 0)
-        {
+            Debug.Log('2');
             CurrentWaveNumber++;
             EnemiesInCurrentWave = EnemiesInWaves[CurrentWaveNumber];
+            TimeForNextWave = NextWaveCooldown;
+        }
+        else if(EnemiesInCurrentWave == 0)
+        {
+            Debug.Log('1');
+            TimeForNextWave -= Time.deltaTime;
         }
         else
         {
             if(TimeForNextEnemySpawn <= 0)
             {
+                Debug.Log('3');
                 SpawnEnemy(QueueOfEnemies.Dequeue());
                 TimeForNextEnemySpawn = NextEnemySpawnDelay;
+                EnemiesInCurrentWave--;
             }
             else
             {
+                Debug.Log("Minus");
                 TimeForNextEnemySpawn -= Time.deltaTime;
             }
         }
@@ -80,6 +95,7 @@ public class GameManager : MonoBehaviour
     [ContextMenu("test spawn enemy")]
     public void SpawnEnemy(EnemyData enemyData)
     {
+        Debug.Log("Spawned");
         GameObject Enemy = Instantiate(EnemyObject, StaticGameManager.VectorPath[0], Quaternion.Euler(new Vector3(0, 0, 0)), transform);
         Enemy enemyComponent = Enemy.AddComponent<Enemy>();
         enemyComponent.EnemyData = enemyData;
