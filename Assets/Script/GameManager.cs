@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour
 
     public void OnCitadelDie()
     {
-        isCitadelLive = false;
+
     }
 }
 

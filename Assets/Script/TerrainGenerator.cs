@@ -23,10 +23,11 @@ public class TerrainGenerator : MonoBehaviour
 
     private LevelFieldData temp = new LevelFieldData(10, 10);
 
-    private GameObject[,] Array = new GameObject[10, 10];
+    public GameObject[,] TilesGOArray;
     [ContextMenu("Create a field")]
     void Start()
     {
+        TilesGOArray = new GameObject[10, 10];
         //To do: чтение информации об уровне из файла
         tempCreateLevelData();
         CreateField();
@@ -37,7 +38,7 @@ public class TerrainGenerator : MonoBehaviour
     /// <summary>
     /// Функция для создания пустого игрового поля
     /// </summary>
-    void CreateField()
+    void CreateField() // old code
     {
         Vector3 position = new Vector3(0, 0, 0);
         Quaternion rotation = new Quaternion(0, 0, 0, 0);
@@ -47,9 +48,9 @@ public class TerrainGenerator : MonoBehaviour
         {
             for (int j = 0; j < data.x; j++)
             {
-                Array[i, j] = Instantiate(Tile, position, rotation, transform);
+                TilesGOArray[i, j] = Instantiate(Tile, position, rotation, transform);
                 position += new Vector3(3.4f, 0, 0);
-                Array[i, j].name = $"Tile {i}{j}";
+                TilesGOArray[i, j].name = $"Tile {i}{j}";
             }
             position -= new Vector3(position.x, 0, 0);
             position += new Vector3(0, 0, 6);
@@ -59,11 +60,41 @@ public class TerrainGenerator : MonoBehaviour
         {
             for (int j = 0; j < data.x; j++)
             {
-                Array[i, j] = Instantiate(Tile, position, rotation, transform);
+                TilesGOArray[i, j] = Instantiate(Tile, position, rotation, transform);
                 position += new Vector3(3.4f, 0, 0);
-                Array[i, j].name = $"Tile {i}{j}";
+                TilesGOArray[i, j].name = $"Tile {i}{j}";
             }
             position -= new Vector3(position.x -1.7f, 0, 0);
+            position += new Vector3(0, 0, 6);
+        }
+    }
+    public void CreateTerrain(LevelFieldData fieldData)
+    {
+        Vector3 position = new Vector3(0, 0, 0);
+        Quaternion rotation = new Quaternion(0, 0, 0, 0);
+        TilesGOArray = new GameObject[fieldData.x, fieldData.y];
+
+        for (int i = 0; i < fieldData.y; i += 2)
+        {
+            for (int j = 0; j < fieldData.x; j++)
+            {
+                TilesGOArray[i, j] = Instantiate(Tile, position, rotation, transform);
+                position += new Vector3(3.4f, 0, 0);
+                TilesGOArray[i, j].name = $"Tile {i}{j}";
+            }
+            position -= new Vector3(position.x, 0, 0);
+            position += new Vector3(0, 0, 6);
+        }
+        position = new Vector3(1.7f, 0, 3);
+        for (int i = 1; i < fieldData.y; i += 2)
+        {
+            for (int j = 0; j < fieldData.x; j++)
+            {
+                TilesGOArray[i, j] = Instantiate(Tile, position, rotation, transform);
+                position += new Vector3(3.4f, 0, 0);
+                TilesGOArray[i, j].name = $"Tile {i}{j}";
+            }
+            position -= new Vector3(position.x - 1.7f, 0, 0);
             position += new Vector3(0, 0, 6);
         }
     }
@@ -76,7 +107,7 @@ public class TerrainGenerator : MonoBehaviour
         {
             for(int j = 0; j < temp.y; j++)
             {
-                SetTileType(temp.tileArray[i, j].type, Array[i, j]);
+                SetTileType(temp.tileArray[i, j].type, TilesGOArray[i, j]);
             }
         }
     }
@@ -85,7 +116,7 @@ public class TerrainGenerator : MonoBehaviour
     /// </summary>
     /// <param name="tileType">Новый тип тайла</param>
     /// <param name="gameObject">Объект тайла</param>
-    void SetTileType(TileType tileType, GameObject gameObject)
+    public void SetTileType(TileType tileType, GameObject gameObject)
     {
         switch (tileType)
         {

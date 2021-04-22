@@ -43,6 +43,14 @@ public struct EnemyData
         EnemyDamage = 250;
         EnemyGold = 25;
     }
+    public EnemyData(GameObject enemyPrefab, double enemyHealth, float emenyMovement, double enemyDamage, int enemyGold)
+    {
+        EnemyPrefab = enemyPrefab;
+        EnemyHealth = enemyHealth;
+        EnemyMovementSpeed = emenyMovement;
+        EnemyDamage = enemyDamage;
+        EnemyGold = enemyGold;
+    }
     public GameObject EnemyPrefab;
     public double EnemyHealth;
     public float EnemyMovementSpeed;
@@ -66,5 +74,21 @@ public struct LevelData
     public Vector3[] EnemyPath;
     public LevelFieldData FieldData;
     public Queue<EnemyData> EnemiesWaves;
+    public List<int> NumberOfEnemiesInWave;
     public double CitadelHealth;
+    public LevelData(Vector3[] enemyPath, LevelFieldData fieldData, Queue<EnemyData> enemiesWaves, List<int> numberOfEnemiesInWaves, double citadelHealth)
+    {
+        EnemyPath = enemyPath;
+        FieldData = fieldData;
+        EnemiesWaves = enemiesWaves;
+        NumberOfEnemiesInWave = numberOfEnemiesInWaves;
+        CitadelHealth = citadelHealth;
+    }
+}
+
+public enum SelectedDifficulty
+{
+    Easy,
+    Normal,
+    Hard
 }
