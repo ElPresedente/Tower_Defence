@@ -23,6 +23,7 @@ public class Enemy : MonoBehaviour
 
     void OnZeroHealth()
     {
+        StaticGameManager.GameManager.Gold += EnemyData.EnemyGold;
         gameObject.SetActive(false);
     }
     

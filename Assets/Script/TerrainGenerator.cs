@@ -25,15 +25,6 @@ public class TerrainGenerator : MonoBehaviour
 
     public GameObject[,] TilesGOArray;
     [ContextMenu("Create a field")]
-    void Start()
-    {
-        TilesGOArray = new GameObject[10, 10];
-        //To do: чтение информации об уровне из файла
-        tempCreateLevelData();
-        CreateField();
-        
-        SetTylesTypes();
-    }
 
     /// <summary>
     /// Функция для создания пустого игрового поля
@@ -68,7 +59,7 @@ public class TerrainGenerator : MonoBehaviour
             position += new Vector3(0, 0, 6);
         }
     }
-    public void CreateTerrain(LevelFieldData fieldData)
+    public void CreateTerrain(LevelFieldData fieldData, bool editMode = false)
     {
         Vector3 position = new Vector3(0, 0, 0);
         Quaternion rotation = new Quaternion(0, 0, 0, 0);
@@ -97,33 +88,45 @@ public class TerrainGenerator : MonoBehaviour
             position -= new Vector3(position.x - 1.7f, 0, 0);
             position += new Vector3(0, 0, 6);
         }
+        if (!editMode)
+        {
+            for (int i = 0; i < fieldData.x; i++)
+            {
+                for (int j = 0; j < fieldData.y; j++)
+                {
+                    Debug.Log(i + " " + j + " " + i * fieldData.y + j);
+                    SetTileType(fieldData.tileArray[i * fieldData.y + j], TilesGOArray[i, j]);
+                }
+            }
+        }
+        
     }
     /// <summary>
     /// первичное определение типов тайлов
     /// </summary>
-    void SetTylesTypes()
-    {
-        for(int i = 0; i < temp.x; i++)
-        {
-            for(int j = 0; j < temp.y; j++)
-            {
-                SetTileType(temp.tileArray[i, j].type, TilesGOArray[i, j]);
-            }
-        }
-    }
+    //void SetTylesTypes()
+    //{
+    //    for(int i = 0; i < temp.x; i++)
+    //    {
+    //        for(int j = 0; j < temp.y; j++)
+    //        {
+    //            SetTileType(temp.tileArray[i, j], TilesGOArray[i, j]);
+    //        }
+    //    }
+    //}
     /// <summary>
     /// Преобразование тайла в указанный тип
     /// </summary>
     /// <param name="tileType">Новый тип тайла</param>
     /// <param name="gameObject">Объект тайла</param>
-    public void SetTileType(TileType tileType, GameObject gameObject)
+    public void SetTileType(TileType tileType, GameObject gameObject, bool editMode = false)
     {
         switch (tileType)
         {
             case TileType.Earth:
                 {
                     gameObject.transform.GetChild(0).GetComponent<Renderer>().material = EarthMaterial;
-                    gameObject.transform.localScale = new Vector3((float)0.5, (float)1.5, (float)0.5);
+                    gameObject.transform.localScale = new Vector3(0.5f, 1.5f, 0.5f);
                     break;
                 }
             case TileType.Path:
@@ -134,18 +137,20 @@ public class TerrainGenerator : MonoBehaviour
             case TileType.Citadel:
                 {
                     gameObject.transform.GetChild(0).GetComponent<Renderer>().material = CitadelMaterial;
-                    gameObject.transform.localScale = new Vector3((float)0.5, (float)5, (float)0.5);
+                    gameObject.transform.localScale = new Vector3(0.5f, 5f, 0.5f);
                     gameObject.AddComponent<Citadel>();
+                    if (!editMode)
+                        StaticGameManager.GameManager.CitadelGO = gameObject;
                     break;
                 }
             case TileType.TowerPlace:
                 {
-                    gameObject.transform.localScale = new Vector3((float)0.5, (float)1.3, (float)0.5);
+                    gameObject.transform.localScale = new Vector3(0.5f, 1.3f, 0.5f);
                     gameObject.transform.GetChild(0).GetComponent<Renderer>().material = TowerBaseMaterial;
                     gameObject.transform.GetChild(0).GetComponent<MeshFilter>().mesh = TowerBase.GetComponent<MeshFilter>().sharedMesh;
                     gameObject.AddComponent<TowerBase>();
-                    
-                    StaticGameManager.GameManager.TowersArray.Add(gameObject);
+                    if(!editMode)
+                        StaticGameManager.GameManager.TowersArray.Add(gameObject);
                     break;
                 }
         }
@@ -164,28 +169,28 @@ public class TerrainGenerator : MonoBehaviour
         return levelData;
     }
 
-    void tempCreateLevelData()
-    {
-        temp.x = 10;
-        temp.y = 10;
-        int[,] tempTileArray = { {1,1,1,1,1,1,1,1,1,1},
-                                 {1,1,1,1,1,1,1,1,1,1},
-                                 {1,1,1,2,2,1,1,2,2,1},
-                                 {1,2,2,4,2,2,2,1,2,2},
-                                 {1,2,1,1,1,1,1,1,1,1},
-                                 {2,1,2,2,2,2,2,1,1,1},
-                                 {1,2,2,1,1,1,1,2,2,1},
-                                 {1,1,1,2,2,1,1,1,2,1},
-                                 {1,2,2,2,1,2,2,2,2,1},
-                                 {3,1,1,1,1,1,1,1,1,1} };
-        for(int i = 0; i < temp.x; i++)
-        {
-            for(int j = 0; j < temp.y; j++)
-            {
-                temp.tileArray[i, j] = new TileData((TileType)tempTileArray[i, j]);
-            }
-        }
-    }
+    //void tempCreateLevelData()
+    //{
+    //    temp.x = 10;
+    //    temp.y = 10;
+    //    int[,] tempTileArray = { {1,1,1,1,1,1,1,1,1,1},
+    //                             {1,1,1,1,1,1,1,1,1,1},
+    //                             {1,1,1,2,2,1,1,2,2,1},
+    //                             {1,2,2,4,2,2,2,1,2,2},
+    //                             {1,2,1,1,1,1,1,1,1,1},
+    //                             {2,1,2,2,2,2,2,1,1,1},
+    //                             {1,2,2,1,1,1,1,2,2,1},
+    //                             {1,1,1,2,2,1,1,1,2,1},
+    //                             {1,2,2,2,1,2,2,2,2,1},
+    //                             {3,1,1,1,1,1,1,1,1,1} };
+    //    for(int i = 0; i < temp.x; i++)
+    //    {
+    //        for(int j = 0; j < temp.y; j++)
+    //        {
+    //            temp.tileArray[i, j] = (TileType)tempTileArray[i, j];
+    //        }
+    //    }
+    //}
 
     
 }

@@ -10,6 +10,7 @@ public class Citadel : MonoBehaviour
     {
         Health = gameObject.AddComponent<HealthComponent>();
         Health.onZeroHealth = StaticGameManager.GameManager.OnCitadelDie;
+        Health.onDamageGet = OnDamageGet;
 
         Collider = gameObject.AddComponent<SphereCollider>();
         Collider.radius = 0.6f;
@@ -17,6 +18,10 @@ public class Citadel : MonoBehaviour
 
         Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
         rigidbody.useGravity = false;
+    }
+    void OnDamageGet()
+    {
+        StaticGameManager.GameManager.LevelUI.GetComponent<LevelUIController>().UpdateGameStat();
     }
     void OnTriggerEnter(Collider other)
     {

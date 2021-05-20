@@ -5,46 +5,38 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
-    // ссылки на объекты сцены для наглядного управления
-    private Transform canvas;
-    private GameObject mainMenu;
-    private GameObject difficultyMenu;
-    private GameObject settingsMenu;
-
-    private void Awake()
-    {
-        canvas = transform.GetChild(0);
-        mainMenu = canvas.Find("MainMenuPanel").gameObject;
-        difficultyMenu = canvas.Find("DifficultyPanel").gameObject;
-        settingsMenu = canvas.Find("SettingsPanel").gameObject;
-    }
+    public GameObject MainMenuGO;
+    public GameObject LevelsMenuGO;
+    public GameObject CreditsMenuGO;
     public void OnStartButtonClick()
     {
-        mainMenu.SetActive(false);
-        difficultyMenu.SetActive(true);
-    }
-    public void OnSettingsButtonClick()
-    {
-        mainMenu.SetActive(false);
-        settingsMenu.SetActive(true);
-    }
-    public void OnStatsButtonClick()
-    {
-
+        MainMenuGO.SetActive(false);
+        LevelsMenuGO.SetActive(true);
     }
     public void OnCreditsButtonClick()
     {
-
+        MainMenuGO.SetActive(false);
+        CreditsMenuGO.SetActive(true);
     }
     public void OnExitButtonClick()
     {
         Application.Quit();
     }
-    
-    // кнопки в настройках
-    public void OnSettingsExitButtonClick()
+    //выбор уровня
+    public void OnLevelButtonClick(string level)
     {
-        mainMenu.SetActive(true);
-        settingsMenu.SetActive(false);
+        Debug.Log(level);
+    }
+    public void OnBackLevelMenuButtonClick()
+    {
+        MainMenuGO.SetActive(true);
+        LevelsMenuGO.SetActive(false);
+    }
+
+    //credit menu
+    public void OnBackCreditsMenuBettonClick()
+    {
+        MainMenuGO.SetActive(true);
+        CreditsMenuGO.SetActive(false);
     }
 }

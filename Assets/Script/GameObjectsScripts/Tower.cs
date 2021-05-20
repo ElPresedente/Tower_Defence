@@ -7,17 +7,21 @@ public class Tower : MonoBehaviour
     public double Damage;
     public double FireSpeed;
 
+    public int Level;
+
     private double timeToShoot;
 
     private Transform FirePoint;
 
-    private List<GameObject> EnemiesList = new List<GameObject>();
+    private List<GameObject> EnemiesList;
 
 
     void Start()
     {
-        Damage = StaticGameManager.TowerDamage;
-        FireSpeed = StaticGameManager.TowerFireSpeed;
+        Level = 0;
+        Damage = StaticGameManager.TowerLevelDamage[Level];
+        FireSpeed = StaticGameManager.TowerLevelFireSpeed[Level];
+        EnemiesList = new List<GameObject>();
 
         timeToShoot = 0;
         FirePoint = gameObject.transform.Find("Icosphere");
@@ -36,10 +40,22 @@ public class Tower : MonoBehaviour
             Debug.Log("Shoot");
             timeToShoot = 60 / FireSpeed;
             GameObject bullet = Instantiate(StaticGameManager.GameManager.Bullet, FirePoint.position, new Quaternion(0, 0, 0, 0), StaticGameManager.GameManager.transform);
-            bullet.AddComponent<Bullet>().Target = EnemiesList[0];
-            bullet.GetComponent<Bullet>().Damage = Damage;
-            bullet.GetComponent<Bullet>().MovementSpeed = StaticGameManager.BulletSpeed;
+            Bullet bulletComponent =  bullet.AddComponent<Bullet>();
+            bulletComponent.Target = EnemiesList[0];
+            bulletComponent.Damage = Damage;
+            bulletComponent.MovementSpeed = StaticGameManager.BulletSpeed;
         }
+    }
+    [ContextMenu("Upgrage")]
+    public void Upgrage()
+    {
+        if(Level == 14)
+        {
+            return;
+        }
+        Level++;
+        Damage = StaticGameManager.TowerLevelDamage[Level];
+        FireSpeed = StaticGameManager.TowerLevelFireSpeed[Level];
     }
 
     private void OnTriggerEnter(Collider other)

@@ -8,8 +8,8 @@ public class LevelGeneratorScript : MonoBehaviour
     [Header("Ссылки на необходимые компоненты")]
     [Tooltip("Объект с компонентом Terrain Generator")]
     public GameObject TerrainGeneratorGO;
-    [Tooltip("Префаб врага")]
-    public GameObject EnemyPrefab;
+    [Tooltip("Префаб врага (не используется)")]
+    public int Enemytype;
 
     [Space()]
     [Header("Информация об уровне (заполнить до генерации тайлов)")]
@@ -37,16 +37,18 @@ public class LevelGeneratorScript : MonoBehaviour
     [Header("Остальные характеристики")]
     [Tooltip("Здоровье цитадели")]
     public double CitadelHealth;
+    [Space()]
+    public string FileName;
 
 
     private LevelFieldData levelFieldData;
-    //Он ДОЛЖЕН съэкономить кучу времени
+    //Он ДОЛЖЕН сэкономить кучу времени
     [ContextMenu("Generate Map to choose tile types")]
     public void GenerateMap()
     {
         TerrainGenerator terrainGenerator = TerrainGeneratorGO.GetComponent<TerrainGenerator>();
         levelFieldData = new LevelFieldData(length, width);
-        terrainGenerator.CreateTerrain(levelFieldData);
+        terrainGenerator.CreateTerrain(levelFieldData, true);
         for (int i = 0; i < levelFieldData.x; i++)
         {
             for(int j = 0; j < levelFieldData.y; j++)
@@ -66,9 +68,10 @@ public class LevelGeneratorScript : MonoBehaviour
         {
             for(int j = 0; j < levelFieldData.y; j++)
             {
-                levelFieldData.tileArray[i, j].type = terrainGenerator.TilesGOArray[i, j].GetComponent<TilesSelectorScript>().tileType;
+                levelFieldData.tileArray[i* levelFieldData.y + j] = terrainGenerator.TilesGOArray[i, j].GetComponent<TilesSelectorScript>().tileType;
             }
         }
+        Debug.Log(levelFieldData.tileArray[5].ToString());
     }
     [ContextMenu("Save level data")]
     public void SaveData()
@@ -79,20 +82,38 @@ public class LevelGeneratorScript : MonoBehaviour
             enemyPath.Add(EnemiesPath[i].position);
         }
 
-        Queue<EnemyData> enemiesWaves = new Queue<EnemyData>();
+        List<EnemyData> enemiesWaves = new List<EnemyData>();
         for(int i = 0; i < NumberOfEnemiesInWave.Count; i++)
         {
             for(int j = 0; j < NumberOfEnemiesInWave[i]; j++)
             {
-                enemiesWaves.Enqueue(new EnemyData(EnemyPrefab, EnemiesHealth[i], EnemiesMovementSpeed[i], EnemiesDamage[i], EnemiesGold[i]));
+                enemiesWaves.Add(new EnemyData(EnemyType.Simple, EnemiesHealth[i], EnemiesMovementSpeed[i], EnemiesDamage[i], EnemiesGold[i]));
             }
         }
 
-        StreamWriter write = new StreamWriter(File.Open("Assets\\Levels\\LEVELDATA.dat", FileMode.OpenOrCreate));
-        LevelData levelData = new LevelData(enemyPath.ToArray(), levelFieldData, enemiesWaves, NumberOfEnemiesInWave, CitadelHealth);
+        StreamWriter write = new StreamWriter(File.Open("Assets\\Levels\\" + FileName, FileMode.OpenOrCreate));
+        LevelData levelData = new LevelData(NumberOfEnemiesInWave.Count, enemyPath.Count, enemiesWaves.Count, width, length);
+        for(int i = 0; i < enemyPath.Count; i++)
+        {
+            levelData.EnemyPath[i] = enemyPath[i];
+        }
+        for(int i = 0; i < enemiesWaves.Count; i++)
+        {
+            levelData.EnemiesWaves[i] = enemiesWaves[i];
+        }
+        for(int i = 0; i < NumberOfEnemiesInWave.Count; i++)
+        {
+            levelData.NumberOfEnemiesInWave[i] = NumberOfEnemiesInWave[i];
+        }
+        levelData.FieldData = levelFieldData;
+        Debug.Log(levelData.FieldData.tileArray[2].ToString());
+        levelData.CitadelHealth = CitadelHealth;
         string test = JsonUtility.ToJson(levelData, true);
         Debug.Log(test);
         write.WriteLine(test);
         write.Close();
+
+        LevelData testt = JsonUtility.FromJson<LevelData>(test);
+        Debug.Log(testt.FieldData.tileArray[2].ToString());
     }
 }

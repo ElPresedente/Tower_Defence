@@ -23,7 +23,7 @@ public class TilesSelectorScript : MonoBehaviour
     [ContextMenu("Set TowerPlace type")]
     public void SetTowerPlace()
     {
-        TerrainGenerator.GetComponent<TerrainGenerator>().SetTileType(TileType.TowerPlace, gameObject);
+        TerrainGenerator.GetComponent<TerrainGenerator>().SetTileType(TileType.TowerPlace, gameObject, true);
         tileType = TileType.TowerPlace;
     }
     [ContextMenu("Set Citadel type")]

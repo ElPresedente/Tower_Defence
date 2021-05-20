@@ -1,7 +1,10 @@
 using UnityEngine;
 using System;
+using System.IO;
 using System.Collections.Generic;
 
+
+[Serializable]
 public enum TileType
 {
     Undefined,
@@ -10,19 +13,15 @@ public enum TileType
     Citadel,
     TowerPlace
 }
-public struct LevelFieldData
+
+[Serializable]
+public enum EnemyType
 {
-    public int x;
-    public int y;
-    public TileData[,] tileArray;
-    public LevelFieldData(int x, int y)
-    {
-        this.x = x;
-        this.y = y;
-        tileArray = new TileData[x, y];
-    }
+    undefined,
+    Simple
 }
 
+[Serializable]
 public struct TileData
 {
     public TileType type;
@@ -33,25 +32,40 @@ public struct TileData
     }
 }
 
+[Serializable]
+public struct LevelFieldData
+{
+    public int x;
+    public int y;
+    public TileType[] tileArray;
+    public LevelFieldData(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+        tileArray = new TileType[x * y];
+    }
+}
+
+[Serializable]
 public struct EnemyData
 {
-    public EnemyData(GameObject enemyPrefab)
+    public EnemyData(EnemyType enemyType)
     {
-        EnemyPrefab = enemyPrefab;
+        EnemyType = enemyType;
         EnemyHealth = 500;
         EnemyMovementSpeed = 10;
         EnemyDamage = 250;
         EnemyGold = 25;
     }
-    public EnemyData(GameObject enemyPrefab, double enemyHealth, float emenyMovement, double enemyDamage, int enemyGold)
+    public EnemyData(EnemyType enemyType, double enemyHealth, float emenyMovement, double enemyDamage, int enemyGold)
     {
-        EnemyPrefab = enemyPrefab;
+        EnemyType = enemyType;
         EnemyHealth = enemyHealth;
         EnemyMovementSpeed = emenyMovement;
         EnemyDamage = enemyDamage;
         EnemyGold = enemyGold;
     }
-    public GameObject EnemyPrefab;
+    public EnemyType EnemyType;
     public double EnemyHealth;
     public float EnemyMovementSpeed;
     public double EnemyDamage;
@@ -73,19 +87,20 @@ public struct LevelData
 {
     public Vector3[] EnemyPath;
     public LevelFieldData FieldData;
-    public Queue<EnemyData> EnemiesWaves;
-    public List<int> NumberOfEnemiesInWave;
+    public EnemyData[] EnemiesWaves;
+    public int[] NumberOfEnemiesInWave;
     public double CitadelHealth;
-    public LevelData(Vector3[] enemyPath, LevelFieldData fieldData, Queue<EnemyData> enemiesWaves, List<int> numberOfEnemiesInWaves, double citadelHealth)
+    public LevelData(int numberOfWaves, int vectorLength, int numberOfEnemies, int x, int y)
     {
-        EnemyPath = enemyPath;
-        FieldData = fieldData;
-        EnemiesWaves = enemiesWaves;
-        NumberOfEnemiesInWave = numberOfEnemiesInWaves;
-        CitadelHealth = citadelHealth;
+        EnemiesWaves = new EnemyData[numberOfEnemies];
+        EnemyPath = new Vector3[vectorLength];
+        NumberOfEnemiesInWave = new int[numberOfWaves];
+        FieldData = new LevelFieldData(x, y);
+        CitadelHealth = 0;
     }
 }
 
+[Serializable]
 public enum SelectedDifficulty
 {
     Easy,

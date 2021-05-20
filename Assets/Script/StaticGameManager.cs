@@ -26,11 +26,31 @@ public static class StaticGameManager
 
     public static GameManager GameManager;
 
-    public static void ReadPathFromFile()
+    public static double[] TowerLevelDamage =  {100, 108.5, 115, 123.5, 130, 
+                                                140, 150  , 160, 170  , 180, 
+                                                195, 210  , 225, 250  , 275 };
+    public static double[] TowerLevelFireSpeed = {100, 100, 100, 100, 100,
+                                                  120, 120, 120, 120, 120,
+                                                  140, 140, 140, 140, 140};
+    public static int TowerCost = 100;
+    public static int[] TowerUpgradeCost = {100, 150, 200, 250, 300,
+                                            350, 400, 450, 500, 550,
+                                            600, 650, 700, 750, 800};
+
+
+
+    public static GameObject EnemyTypeToGameObject(EnemyType enemyType)
     {
-        StreamReader read = new StreamReader(File.Open("Assets\\Levels\\level1.dat", FileMode.Open));
-        string jsonData = read.ReadToEnd();
-        JsonStruct data = JsonUtility.FromJson<JsonStruct>(jsonData);
-        VectorPath = data.VectorPath;
+        switch (enemyType)
+        {
+            case EnemyType.Simple:
+                {
+                    return GameManager.EnemyObject;
+                }
+            default:
+                {
+                    return GameManager.EnemyObject;
+                }
+        }
     }
 }

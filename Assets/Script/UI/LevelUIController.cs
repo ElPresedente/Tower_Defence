@@ -1,59 +1,40 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class LevelUIController : MonoBehaviour
 {
-    [Space]
-    [Header("Панели, используемые в интерфейсе игровго уровня")]
-    [Tooltip("Взаимодействие пользователя с игрой")]
-    public GameObject InterfacePanel;
-    [Tooltip("Взаимодействие пользователя с меню")]
-    public GameObject StopGamePanel;
+    public GameObject PausePanel;
+    public GameObject PauseButton;
 
-    public void Awake()
+    public GameObject LevelUIPanelText;
+
+    private GameManager GameManager;
+
+    private void Start()
     {
-        Time.timeScale = 1;         // Выравниваем временной поток и искривления пространства :)
-        // Настраиваем правильную последовательность слоёв в UI при загрузке сцены
-        InterfacePanel.SetActive(true);
-        StopGamePanel.SetActive(false);
-    }
-    public void OnPauseGameButtonClick()
-    {
-        Time.timeScale = 0;     // Останавливаем игру
-        InterfacePanel.SetActive(false);
-        StopGamePanel.SetActive(true);
-    }
-    public void OnResumeGameButtonClick()
-    {
-        Time.timeScale = 1;     // Возобновляем игру
-        StopGamePanel.SetActive(false);
-        InterfacePanel.SetActive(true);
-    }
-    public void OnBackToMainMenuButtonClick()
-    {
-        //TODO: Памагити сделать загрузку
-        SceneManager.LoadScene("MainMenu");
-    }
-    public void OnExitGameButtonClick()
-    {
-        //TODO: Вызывать панель предупреждения при нажатии данной кнопки: "Вы точно хотите выйти из игры?"
-        Application.Quit();
+        GameManager = StaticGameManager.GameManager;
     }
 
-    public void OnTimeScaleNormalButtonClick()
+
+    public void OnResumeButtonClick()
     {
-        Time.timeScale = 1.0f;
+        PausePanel.SetActive(false);
+        Time.timeScale = 1;
     }
-    public void OnTimeScaleOneAndHalfButtonClick()
+
+    public void OnPauseButtonClick()
     {
-        Time.timeScale = 1.5f;
+        PausePanel.SetActive(true);
+        Time.timeScale = 0;
     }
-    public void OnTimeScaleZeroAndHalfButtonClick()
+
+    public void OnBackToMenuButtonClick()
     {
-        Time.timeScale = 0.5f;
+
     }
-    public void OnTimeScaleTwoButtonClick()
+    public void UpdateGameStat()
     {
-        Time.timeScale = 2.0f;
+        LevelUIPanelText.GetComponent<TMP_Text>().text = string.Format("Gold - {0}\nCitadel Health - {1}", StaticGameManager.GameManager.)
     }
 }
