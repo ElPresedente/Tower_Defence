@@ -14,7 +14,7 @@ public class HealthComponent : MonoBehaviour
             {
                 onZeroHealth();
             }
-            else
+            else if(traceDamage)
             {
                 onDamageGet();
             }
@@ -25,6 +25,8 @@ public class HealthComponent : MonoBehaviour
     public onDamageGet onDamageGet;
 
     public double _HealthPoints;
+
+    public bool traceDamage = false;
 }
 public delegate void onZeroHealth();
 public delegate void onDamageGet();

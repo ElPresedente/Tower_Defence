@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour
     void FixedUpdate()
     {
         gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, Target.transform.position, Time.deltaTime * MovementSpeed);
-        if((Target.transform.position - gameObject.transform.position).magnitude <= 0.05f)
+        if(!Target.activeSelf)
         {
             gameObject.SetActive(false);
         }
@@ -19,7 +19,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.gameObject == Target)
         {
             other.GetComponent<HealthComponent>().HealthPoints -= Damage;
             gameObject.SetActive(false);

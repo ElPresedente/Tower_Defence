@@ -8,18 +8,9 @@ public static class StaticGameManager
 {
     public static int Gold = 100;
 
-    public static double TowerDamage = 100;
-    public static double TowerFireSpeed = 120;
-    public static float BulletSpeed = 100;
-
-    public static double EnemyHealth = 500;
-    public static float EnemyMovementSpeed = 10;
-    public static double EnemyDamage = 250;
-    public static int EnemyGold = 25;
-
     public static float TimeForNextEnemy = 2.5f;
 
-    public static double CitadelHealth = 1000;
+    public static float BulletSpeed = 100;
     //TODO: effects
 
     public static Vector3[] VectorPath;
@@ -37,7 +28,7 @@ public static class StaticGameManager
                                             350, 400, 450, 500, 550,
                                             600, 650, 700, 750, 800};
 
-
+    public static string levelDataFileName = "level1.dat";
 
     public static GameObject EnemyTypeToGameObject(EnemyType enemyType)
     {

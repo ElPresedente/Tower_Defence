@@ -19,16 +19,17 @@ public static class SceneLoader
     public static void LoadScene(string SceneName)
     {
         Scene sceneToLoad = SceneManager.GetSceneByName(SceneName);
-        if (!sceneToLoad.IsValid())
-        {
-            Debug.LogError("SceneLoader: Invalid Scene name");
-            return;
-        }
-        if(sceneToLoad == SceneManager.GetActiveScene())
-        {
-            Debug.LogWarning("SceneLoader: Attempt to load active scene, refused");
-            return;
-        }
+        Debug.Log(string.Format("Scene {0} valid - {1}", SceneName, sceneToLoad.IsValid().ToString()));
+        //if (!sceneToLoad.IsValid())
+        //{
+        //    Debug.LogError("SceneLoader: Invalid Scene name");
+        //    return;
+        //}
+        //if (sceneToLoad == SceneManager.GetActiveScene())
+        //{
+        //    Debug.LogWarning("SceneLoader: Attempt to load active scene, refused");
+        //    return;
+        //}
         onLoadingSceneCallback = () =>
         {
             GameObject LoadingGameObject = new GameObject();

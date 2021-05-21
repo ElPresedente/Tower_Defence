@@ -24,6 +24,8 @@ public class TerrainGenerator : MonoBehaviour
     private LevelFieldData temp = new LevelFieldData(10, 10);
 
     public GameObject[,] TilesGOArray;
+
+    public double CitadelHealth;
     [ContextMenu("Create a field")]
 
     /// <summary>
@@ -94,7 +96,7 @@ public class TerrainGenerator : MonoBehaviour
             {
                 for (int j = 0; j < fieldData.y; j++)
                 {
-                    Debug.Log(i + " " + j + " " + i * fieldData.y + j);
+                    //Debug.Log(i + " " + j + " " + i * fieldData.y + j);
                     SetTileType(fieldData.tileArray[i * fieldData.y + j], TilesGOArray[i, j]);
                 }
             }
@@ -138,7 +140,7 @@ public class TerrainGenerator : MonoBehaviour
                 {
                     gameObject.transform.GetChild(0).GetComponent<Renderer>().material = CitadelMaterial;
                     gameObject.transform.localScale = new Vector3(0.5f, 5f, 0.5f);
-                    gameObject.AddComponent<Citadel>();
+                    gameObject.AddComponent<Citadel>().StartHealth = CitadelHealth;
                     if (!editMode)
                         StaticGameManager.GameManager.CitadelGO = gameObject;
                     break;
@@ -149,8 +151,10 @@ public class TerrainGenerator : MonoBehaviour
                     gameObject.transform.GetChild(0).GetComponent<Renderer>().material = TowerBaseMaterial;
                     gameObject.transform.GetChild(0).GetComponent<MeshFilter>().mesh = TowerBase.GetComponent<MeshFilter>().sharedMesh;
                     gameObject.AddComponent<TowerBase>();
-                    if(!editMode)
+                    if (!editMode)
+                    {
                         StaticGameManager.GameManager.TowersArray.Add(gameObject);
+                    }
                     break;
                 }
         }

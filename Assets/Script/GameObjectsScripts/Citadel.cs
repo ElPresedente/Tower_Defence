@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class Citadel : MonoBehaviour
 {
-    private HealthComponent Health;
+    public HealthComponent Health;
+    public double StartHealth;
     private SphereCollider Collider;
     void Start()
     {
         Health = gameObject.AddComponent<HealthComponent>();
+        Health.HealthPoints = StartHealth;
         Health.onZeroHealth = StaticGameManager.GameManager.OnCitadelDie;
         Health.onDamageGet = OnDamageGet;
+        Health.traceDamage = true;
 
         Collider = gameObject.AddComponent<SphereCollider>();
         Collider.radius = 0.6f;
@@ -18,10 +21,13 @@ public class Citadel : MonoBehaviour
 
         Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
         rigidbody.useGravity = false;
+
+        Debug.Log("Citadel init success");
     }
     void OnDamageGet()
     {
         StaticGameManager.GameManager.LevelUI.GetComponent<LevelUIController>().UpdateGameStat();
+        Debug.Log("Updated UI");
     }
     void OnTriggerEnter(Collider other)
     {
@@ -30,7 +36,7 @@ public class Citadel : MonoBehaviour
         {
             Health.HealthPoints -= other.GetComponent<Enemy>().Damage;
             other.gameObject.SetActive(false);
-            
+            StaticGameManager.GameManager.NumberOfDeaths++;
         }
     }
 

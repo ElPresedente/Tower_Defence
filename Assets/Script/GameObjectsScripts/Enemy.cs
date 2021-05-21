@@ -18,17 +18,13 @@ public class Enemy : MonoBehaviour
         MovingComp.MovementSpeed = EnemyData.EnemyMovementSpeed;
 
 
-        Damage = StaticGameManager.EnemyDamage;
+        Damage = EnemyData.EnemyDamage;
     }
 
     void OnZeroHealth()
     {
         StaticGameManager.GameManager.Gold += EnemyData.EnemyGold;
+        StaticGameManager.GameManager.NumberOfDeaths++;
         gameObject.SetActive(false);
     }
-    
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    
-    //}
 }

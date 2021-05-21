@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class GameManager : MonoBehaviour
@@ -32,7 +33,9 @@ public class GameManager : MonoBehaviour
     private Queue<EnemyData> QueueOfEnemies;
 
     public GameObject TerrainGeneratorGO;
-    private TerrainGenerator terrainGeneraror;
+    private TerrainGenerator terrainGenerator;
+    public int NumberOfDeaths;
+    private int TotalNumberOfEnemies;
 
     public int Gold
     {
@@ -50,19 +53,22 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log(SceneManager.GetActiveScene().name);
+
         //настройка ссылок на нестатические объекты
         StaticGameManager.GameManager = gameObject.GetComponent<GameManager>();
-        terrainGeneraror = TerrainGeneratorGO.GetComponent<TerrainGenerator>();
+        terrainGenerator = TerrainGeneratorGO.GetComponent<TerrainGenerator>();
         //исходные значения для созжания волн врагов
         TimeForNextWave = NextWaveCooldown;
         TimeForNextEnemySpawn = StaticGameManager.TimeForNextEnemy;
         //загрузка данных уровня
-        StreamReader read = new StreamReader(File.Open("Assets\\Levels\\LEVELDATA.dat", FileMode.Open));
+        StreamReader read = new StreamReader(File.Open("Assets\\Levels\\"+StaticGameManager.levelDataFileName, FileMode.Open));
         string json = read.ReadToEnd();
         levelData = JsonUtility.FromJson<LevelData>(json);
         //Создание игрового поля
         StaticGameManager.VectorPath = levelData.EnemyPath;
-        terrainGeneraror.CreateTerrain(levelData.FieldData);
+        terrainGenerator.CitadelHealth = levelData.CitadelHealth;
+        terrainGenerator.CreateTerrain(levelData.FieldData);
         //заполнение очереди врагов
         QueueOfEnemies = new Queue<EnemyData>(levelData.EnemiesWaves.Length);
         for (int i = 0; i < levelData.EnemiesWaves.Length; i++)
@@ -74,10 +80,24 @@ public class GameManager : MonoBehaviour
 
         NumberOfWaves = levelData.NumberOfEnemiesInWave.Length;
         //Стартовая сумма золота
-        Gold = StaticGameManager.Gold;
+        _gold = StaticGameManager.Gold + 1000;
+
+        LevelUI.GetComponent<LevelUIController>().FirstUpdate(Gold, levelData.CitadelHealth);
+
+        NumberOfDeaths = TotalNumberOfEnemies = 0;
+        for (int i = 0; i < levelData.NumberOfEnemiesInWave.Length; i++)
+        {
+            TotalNumberOfEnemies += levelData.NumberOfEnemiesInWave[i];
+        }
     }
     private void Update()
     {
+        if(NumberOfDeaths >= TotalNumberOfEnemies)
+        {
+            Debug.Log("You WON!");
+            string log = string.Format("You win!\nCongratulations!\nKilled enemies: {0}", NumberOfDeaths);
+            LevelUI.GetComponent<LevelUIController>().EndLevelPanel(log);
+        }
         if(CurrentWaveNumber > NumberOfWaves)
         {
             return;
@@ -131,7 +151,8 @@ public class GameManager : MonoBehaviour
 
     public void OnCitadelDie()
     {
-
+        string log = string.Format("You lost...\nDon't worry.\nKilled enemies: {0}", NumberOfDeaths);
+        LevelUI.GetComponent<LevelUIController>().EndLevelPanel(log);
     }
 }
 

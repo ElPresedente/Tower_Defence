@@ -8,6 +8,10 @@ public class MainMenuManager : MonoBehaviour
     public GameObject MainMenuGO;
     public GameObject LevelsMenuGO;
     public GameObject CreditsMenuGO;
+    private void Awake()
+    {
+        Time.timeScale = 1;
+    }
     public void OnStartButtonClick()
     {
         MainMenuGO.SetActive(false);
@@ -25,7 +29,8 @@ public class MainMenuManager : MonoBehaviour
     //выбор уровня
     public void OnLevelButtonClick(string level)
     {
-        Debug.Log(level);
+        StaticGameManager.levelDataFileName = level;
+        SceneManager.LoadScene("LevelScene");
     }
     public void OnBackLevelMenuButtonClick()
     {
